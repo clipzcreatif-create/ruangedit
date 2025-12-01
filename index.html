@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIPZ. - Dashboard</title>
+    
+    <!-- Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        page: '#050505',
+                        brand: '#7C3AED',
+                        pill: '#1A1A1A',
+                        border: '#ffffff1a',
+                        card: '#0A0A0B', 
+                        text: '#E5E5E5',
+                        subtext: '#A1A1AA',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'purple-glow': 'radial-gradient(circle at 0% 50%, rgba(124, 58, 237, 0.15) 0%, transparent 50%)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Reset */
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Background Grain */
+        .bg-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Ambient Glow */
+        .ambient-light {
+            position: fixed;
+            top: 0;
+            left: -20%;
+            width: 50%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(5, 5, 5, 0) 70%);
+            filter: blur(80px);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Navbar User Pill */
+        .user-pill {
+            background-color: #121212;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            padding: 4px 16px 4px 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: border-color 0.2s;
+        }
+        .user-pill:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Dashboard Card Styles */
+        .dash-card {
+            background-color: rgba(10, 10, 11, 0.6); /* Lebih transparan */
+            border: 1px solid rgba(255, 255, 255, 0.08); /* Border lebih halus */
+            border-radius: 24px; /* Lebih rounded agar premium */
+            backdrop-filter: blur(10px); /* Glass effect subtle */
+        }
+
+        /* Input Field - Integrated Style */
+        .input-premium {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d4d4d8;
+            border-radius: 9999px; /* Pill shape */
+            transition: all 0.3s ease;
+        }
+        .input-premium:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(124, 58, 237, 0.5); /* Purple tint on focus */
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+        }
+
+        /* Button Styles - Premium Pill */
+        .btn-primary-pill {
+            background-color: #ffffff;
+            color: #000000;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        .btn-primary-pill:hover {
+            background-color: #e5e5e5;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary-pill {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #a1a1aa;
+            border-radius: 9999px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        /* Specific Hover Colors for Secondary Buttons */
+        .btn-cyan-hover:hover {
+            border-color: rgba(8, 145, 178, 0.5);
+            background-color: rgba(8, 145, 178, 0.1);
+            color: #22d3ee;
+        }
+        
+        .btn-green-hover:hover {
+            border-color: rgba(5, 150, 105, 0.5);
+            background-color: rgba(5, 150, 105, 0.1);
+            color: #34d399;
+        }
+
+        .btn-danger-text {
+            color: #52525b; /* Zinc 600 */
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .btn-danger-text:hover {
+            color: #ef4444; /* Red 500 */
+        }
+    </style>
+</head>
+<body class="selection:bg-brand selection:text-white">
+
+    <!-- Background Elements -->
+    <div class="bg-grain"></div>
+    <div class="ambient-light"></div>
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 pt-6 px-8 top-0 bg-[#050505]/80 backdrop-blur-md border-b border-white/5 pb-4">
+        <div class="max-w-[1400px] mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <span class="font-bold text-2xl tracking-tight text-white">CLIPZ<span class="text-brand">.</span></span>
+            </div>
+
+            <!-- Right Side -->
+            <div class="flex items-center gap-12">
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="https://clipzcreatif-create.github.io/ClipzID/#" class="text-sm font-medium text-subtext hover:text-white transition-colors">Home</a>
+                    <a href="#" class="text-sm font-medium text-subtext hover:text-white transition-colors">Edit</a>
+                    <a href="#" class="text-sm font-medium text-subtext hover:text-white transition-colors">Konsultasi</a>
+                </div>
+
+                <div class="user-pill cursor-pointer">
+                    <div class="text-right leading-tight">
+                        <div class="text-[11px] font-bold text-brand">Pro User</div>
+                        <div class="text-xs font-bold text-white">Joko</div>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-zinc-800 border border-white/10 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity">
+                    </div>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-500 ml-1"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="min-h-screen pt-32 pb-12 px-6">
+        <div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+            
+            <!-- LEFT COLUMN (Video & Controls) -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                
+                <!-- 1. Video Player Placeholder -->
+                <div class="dash-card aspect-video flex flex-col items-center justify-center text-zinc-600 relative overflow-hidden group">
+                    <!-- Subtle shine effect -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                    
+                    <i data-lucide="play-circle" class="w-16 h-16 mb-4 opacity-30 group-hover:opacity-100 group-hover:scale-110 group-hover:text-white transition-all duration-300"></i>
+                    <p class="text-sm font-medium opacity-50 group-hover:opacity-80 transition-opacity">Preview Area</p>
+                </div>
+
+                <!-- 2. Controls Panel -->
+                <div class="dash-card p-8">
+                    <!-- Input Row -->
+                    <div class="flex flex-col md:flex-row gap-4 mb-8 items-center">
+                        <div class="flex-1 w-full relative">
+                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
+                                <i data-lucide="link" class="w-4 h-4"></i>
+                            </div>
+                            <input type="text" placeholder="Tempelkan link YouTube di sini..." class="input-premium w-full pl-11 pr-4 py-3.5 text-sm placeholder-zinc-600">
+                        </div>
+                        
+                        <!-- Primary Button: White Pill (Matches 'Dapatkan Akses') -->
+                        <button class="w-full md:w-auto btn-primary-pill py-3.5 px-8 text-sm flex items-center justify-center gap-2 whitespace-nowrap">
+                            <span>Muat Video</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8"></div>
+
+                    <!-- Action Buttons Grid -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-between items-center">
+                        <div class="flex gap-4 w-full sm:w-auto">
+                            <!-- Secondary: Auto Clip (Cyan Hover) -->
+                            <button class="flex-1 sm:flex-none btn-secondary-pill btn-cyan-hover py-3 px-6 text-sm flex items-center justify-center gap-2">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                Auto Clip
+                            </button>
+                            
+                            <!-- Secondary: Download (Green Hover) -->
+                            <button class="flex-1 sm:flex-none btn-secondary-pill btn-green-hover py-3 px-6 text-sm flex items-center justify-center gap-2">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                                Download
+                            </button>
+                        </div>
+
+                        <!-- Tertiary: Delete (Ghost Text) -->
+                        <button class="btn-danger-text flex items-center gap-2 mt-4 sm:mt-0 hover:underline decoration-red-500/30 underline-offset-4">
+                            <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+                            Hapus Klip
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN (Recommendations) -->
+            <div class="lg:col-span-1 h-full">
+                <div class="dash-card p-6 h-full min-h-[400px] flex flex-col relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-6 z-10">
+                        <h2 class="text-lg font-semibold text-white">Rekomendasi</h2>
+                        <span class="text-[10px] uppercase tracking-wider text-brand font-bold bg-brand/10 px-2 py-1 rounded-md border border-brand/20">AI Ready</span>
+                    </div>
+                    
+                    <div class="flex-1 flex flex-col items-center justify-center text-center p-8 border border-dashed border-zinc-800 rounded-2xl bg-zinc-900/20 z-10">
+                        <div class="text-zinc-600 space-y-3">
+                            <div class="w-12 h-12 rounded-full bg-zinc-900 flex items-center justify-center mx-auto border border-zinc-800">
+                                <i data-lucide="film" class="w-5 h-5 opacity-50"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-sm font-medium text-zinc-400">Daftar klip kosong</p>
+                                <p class="text-xs opacity-50">Silakan muat video baru</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Background Decor for Right Column -->
+                    <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-brand/5 rounded-full blur-3xl pointer-events-none"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

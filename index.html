@@ -19,6 +19,15 @@
     <!-- YouTube Iframe API -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
+    <!-- Google Generative AI Importmap (FIXED) -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+
     <!-- Tailwind Config -->
     <script>
         tailwind.config = {
@@ -32,6 +41,9 @@
                         card: '#0A0A0B', 
                         text: '#E5E5E5',
                         subtext: '#A1A1AA',
+                        'cc-bg': '#121212',       
+                        'cc-panel': '#1E1E1E',    
+                        'cc-accent': '#00E5FF',   
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -49,6 +61,10 @@
                             '50%': { transform: 'scale(1.2)' },
                             '100%': { transform: 'scale(1)' },
                         }
+                    },
+                    cursor: {
+                        'grab': 'grab',
+                        'grabbing': 'grabbing',
                     }
                 }
             }
@@ -57,221 +73,85 @@
 
     <style>
         /* Base Reset */
-        body {
-            background-color: #050505;
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Background Grain */
-        .bg-grain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.05;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        /* Ambient Glow */
-        .ambient-light {
-            position: fixed;
-            top: 0;
-            left: -20%;
-            width: 50%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(5, 5, 5, 0) 70%);
-            filter: blur(80px);
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        /* User Pill & Dropdown */
-        .user-pill {
-            background-color: #121212;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 9999px;
-            padding: 4px 16px 4px 6px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: border-color 0.2s;
-        }
-        .user-pill:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Dropdown Animation */
-        .wa-dropdown {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: all 0.2s ease-in-out;
-        }
-        .group:hover .wa-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        /* Dashboard Card Styles */
-        .dash-card {
-            background-color: rgba(10, 10, 11, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            backdrop-filter: blur(10px);
-        }
-
-        /* Input Field - Integrated Style */
-        .input-premium {
-            background-color: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #d4d4d8;
-            border-radius: 9999px;
-            transition: all 0.3s ease;
-        }
-        .input-premium:focus {
-            outline: none;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-color: rgba(124, 58, 237, 0.5);
-            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
-        }
-
-        /* Button Styles - Premium Pill */
-        .btn-primary-pill {
-            background-color: #ffffff;
-            color: #000000;
-            border-radius: 9999px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-        }
-        .btn-primary-pill:hover {
-            background-color: #e5e5e5;
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary-pill {
-            background-color: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #a1a1aa;
-            border-radius: 9999px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
+        body { background-color: #050505; color: #ffffff; font-family: 'Inter', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        .bg-grain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .ambient-light { position: fixed; top: 0; left: -20%; width: 50%; height: 100%; background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(5, 5, 5, 0) 70%); filter: blur(80px); z-index: -2; pointer-events: none; }
         
-        .btn-secondary-pill:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            border-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .btn-cyan-hover:not(:disabled):hover {
-            border-color: rgba(8, 145, 178, 0.5);
-            background-color: rgba(8, 145, 178, 0.1);
-            color: #22d3ee;
-        }
+        /* Navigation & Dropdowns */
+        .user-pill { background-color: #121212; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 9999px; padding: 4px 16px 4px 6px; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s; }
+        .user-pill:hover { border-color: rgba(255, 255, 255, 0.2); }
+        .wa-dropdown { opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.2s ease-in-out; }
+        .group:hover .wa-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
         
-        .btn-green-hover:not(:disabled):hover {
-            border-color: rgba(5, 150, 105, 0.5);
-            background-color: rgba(5, 150, 105, 0.1);
-            color: #34d399;
-        }
-
-        .btn-danger-text {
-            color: #52525b;
-            transition: all 0.2s;
-            font-size: 0.875rem;
-            cursor: pointer;
-        }
-        .btn-danger-text:hover {
-            color: #ef4444;
-        }
-        .btn-danger-text:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            color: #3f3f46;
-        }
-
+        /* Dashboard & UI Components */
+        .dash-card { background-color: rgba(10, 10, 11, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; backdrop-filter: blur(10px); }
+        .input-premium { background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: #d4d4d8; border-radius: 9999px; transition: all 0.3s ease; }
+        .input-premium:focus { outline: none; background-color: rgba(255, 255, 255, 0.05); border-color: rgba(124, 58, 237, 0.5); box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1); }
+        
+        /* Buttons */
+        .btn-primary-pill { background-color: #ffffff; color: #000000; border-radius: 9999px; font-weight: 600; transition: all 0.2s ease; box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); cursor: pointer; }
+        .btn-primary-pill:hover { background-color: #e5e5e5; transform: translateY(-1px); }
+        .btn-secondary-pill { background-color: transparent; border: 1px solid rgba(255, 255, 255, 0.1); color: #a1a1aa; border-radius: 9999px; font-weight: 500; transition: all 0.3s ease; cursor: pointer; }
+        .btn-secondary-pill:disabled { opacity: 0.5; cursor: not-allowed; border-color: rgba(255, 255, 255, 0.05); }
+        .btn-cyan-hover:not(:disabled):hover { border-color: rgba(8, 145, 178, 0.5); background-color: rgba(8, 145, 178, 0.1); color: #22d3ee; }
+        .btn-green-hover:not(:disabled):hover { border-color: rgba(5, 150, 105, 0.5); background-color: rgba(5, 150, 105, 0.1); color: #34d399; }
+        .btn-danger-text { color: #52525b; transition: all 0.2s; font-size: 0.875rem; cursor: pointer; }
+        .btn-danger-text:hover { color: #ef4444; }
+        .btn-danger-text:disabled { opacity: 0.5; cursor: not-allowed; color: #3f3f46; }
+        
         /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
+        
+        /* Modals */
+        .modal-overlay { background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); }
+        .glass-modal { background: rgba(18, 18, 18, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        
+        /* Pricing Cards */
+        .pricing-card { background: #0A0A0B; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; transition: all 0.3s ease; }
+        .pricing-card:hover { border-color: rgba(124, 58, 237, 0.3); transform: translateY(-4px); }
+        .pricing-card.best-value { border: 1px solid #7C3AED; box-shadow: 0 0 30px rgba(124, 58, 237, 0.1); }
+        .animate-checkmark { animation: checkmark 0.5s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
 
-        /* Loader */
-        .loader {
-            border: 3px solid rgba(255,255,255,0.1);
-            border-left-color: #7C3AED;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Modal Styles */
-        .modal-overlay {
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-        }
-        .glass-modal {
-            background: rgba(18, 18, 18, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Pricing Card */
-        .pricing-card {
-            background: #0A0A0B;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            transition: all 0.3s ease;
-        }
-        .pricing-card:hover {
-            border-color: rgba(124, 58, 237, 0.3);
-            transform: translateY(-4px);
-        }
-        .pricing-card.best-value {
-            border: 1px solid #7C3AED;
-            box-shadow: 0 0 30px rgba(124, 58, 237, 0.1);
-        }
-
-        /* Success Animation */
-        .animate-checkmark {
-            animation: checkmark 0.5s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-        }
+        /* EDITOR SPECIFIC STYLES */
+        .editor-panel { background-color: rgba(10, 10, 11, 0.8); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .timeline-ruler { background-image: repeating-linear-gradient(90deg, #555 0, #555 1px, transparent 1px, transparent 10px); height: 10px; width: 100%; opacity: 0.5; }
+        .canvas-element { position: absolute; cursor: grab; user-select: none; border: 2px solid transparent; padding: 4px; white-space: nowrap; }
+        .canvas-element:active { cursor: grabbing; }
+        .canvas-element.selected { border: 2px solid #00E5FF; background: rgba(0, 229, 255, 0.1); }
+        .canvas-element.selected::after { content: ''; position: absolute; bottom: -6px; right: -6px; width: 12px; height: 12px; background: #00E5FF; border-radius: 50%; cursor: nwse-resize; }
+        .filter-vintage { filter: sepia(0.5) contrast(1.2); }
+        .filter-bw { filter: grayscale(1); }
+        .filter-cyber { filter: hue-rotate(45deg) contrast(1.3) saturate(1.5); text-shadow: 0 0 5px cyan; }
+        .filter-soft { filter: brightness(1.1) blur(0.5px); }
+        .filter-none { filter: none; }
+        #editor-playhead { pointer-events: none; transition: left 0.05s linear; }
     </style>
 </head>
 <body class="selection:bg-brand selection:text-white overflow-hidden">
 
-    <!-- Background Elements -->
     <div class="bg-grain"></div>
     <div class="ambient-light"></div>
 
     <!-- NAVBAR -->
-    <nav class="fixed w-full z-50 pt-6 px-8 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-white/5 pb-4">
+    <nav class="fixed w-full z-50 pt-6 px-8 top-0 bg-[#050505]/90 backdrop-blur-md border-b border-white/5 pb-4 transition-all duration-300">
         <div class="max-w-[1400px] mx-auto flex justify-between items-center">
             <!-- Logo -->
-            <div class="flex items-center">
+            <div class="flex items-center cursor-pointer" onclick="switchView('landing')">
                 <span class="font-bold text-2xl tracking-tight text-white">CLIPZ<span class="text-brand">.</span></span>
             </div>
 
             <!-- Navigation Links -->
             <div class="flex items-center gap-12">
+                <!-- Main Menu -->
                 <div class="hidden md:flex items-center gap-8">
                     <!-- Home (Link External) -->
                     <a href="https://clipzcreatif-create.github.io/ClipzID/#" class="text-sm font-medium text-subtext hover:text-white transition-colors">Home</a>
                     
-                    <!-- EDIT DROPDOWN -->
-                    <div class="relative group h-full flex items-center">
+                    <!-- EDIT DROPDOWN (Protected) -->
+                    <div id="nav-edit-dropdown" class="relative group h-full flex items-center">
                         <button class="text-sm font-medium text-subtext hover:text-white transition-colors flex items-center gap-1.5 py-2">
                             Edit
                             <i data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-70"></i>
@@ -300,7 +180,6 @@
                             Konsultasi
                             <i data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-70"></i>
                         </button>
-                        
                         <div class="wa-dropdown absolute top-full right-0 pt-2 w-64 z-50">
                             <div class="bg-[#121212] border border-white/10 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl">
                                 <div class="px-4 py-3 border-b border-white/5 bg-white/5">
@@ -328,7 +207,7 @@
                 <!-- Auth / Profile Section -->
                 <div id="auth-container">
                     <!-- State 1: Not Logged In (DEFAULT) -->
-                    <button id="btn-login-trigger" onclick="toggleLoginModal()" class="text-sm font-semibold text-white bg-brand hover:bg-brand/90 px-5 py-2 rounded-full transition shadow-lg shadow-brand/20">
+                    <button id="btn-login-trigger" onclick="toggleLoginModal()" class="px-6 py-2.5 rounded-full bg-white hover:bg-gray-200 text-black text-sm font-bold border border-transparent transition-all transform hover:-translate-y-0.5 tracking-wide shadow-lg">
                         Login
                     </button>
 
@@ -351,20 +230,15 @@
                             </div>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-zinc-500 ml-1"></i>
                             
-                            <!-- Credit Dropdown (Start 500) -->
+                            <!-- Credit Dropdown -->
                             <div class="wa-dropdown absolute top-full right-0 pt-4 w-64 z-50">
                                 <div class="bg-[#121212] border border-white/10 rounded-xl shadow-2xl p-5 relative overflow-hidden">
                                     <p class="text-[11px] text-zinc-500 font-medium mb-1 tracking-wide">Total Credit</p>
                                     <div class="flex items-center gap-2 mb-5">
                                         <i data-lucide="zap" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
-                                        <!-- ID added for dynamic update -->
                                         <span id="credit-balance" class="text-2xl font-bold text-white tracking-tight">500</span>
                                     </div>
-                                    
-                                    <!-- Divider -->
                                     <div class="h-px bg-white/10 w-full mb-4"></div>
-                                    
-                                    <!-- Logout Action -->
                                     <button onclick="logout()" class="flex items-center gap-3 text-sm text-[#FF5A5A] hover:text-[#ff8585] transition w-full font-medium">
                                         <i data-lucide="log-out" class="w-4 h-4"></i>
                                         Keluar
@@ -378,8 +252,76 @@
         </div>
     </nav>
 
-    <!-- ======= VIEW 1: DOWNLOADER (DEFAULT VIEW) ======= -->
-    <section id="view-downloader" class="min-h-screen pt-32 pb-12 px-6 h-screen overflow-y-auto">
+    <!-- ======= VIEW 1: LANDING PAGE (DEFAULT VIEW) ======= -->
+    <section id="view-landing" class="pt-32 pb-20 overflow-x-hidden">
+        
+        <!-- HERO SECTION -->
+        <div class="min-h-[80vh] flex flex-col justify-center items-center text-center px-4 relative mb-20">
+            <div class="mb-10 animate-fade-in">
+                <span class="hero-badge bg-white/5 border border-white/10 rounded-full px-6 py-2 text-[11px] font-bold tracking-widest text-[#A1A1AA] uppercase">AGENCY EDITING & CONTENT ACCELERATOR</span>
+            </div>
+            <h1 class="text-6xl md:text-[5.5rem] font-bold leading-[1.1] tracking-tight text-white mb-8">
+                Stop Editing.<br>
+                <span class="text-white">Start Creating<span class="text-zinc-600">.</span></span>
+            </h1>
+            <p class="text-subtext text-lg max-w-2xl mx-auto mb-12 leading-relaxed font-light">
+                CLIPZ adalah agensi editing modern yang membantu kreator mengubah konten panjang menjadi konten pendek berkualitas tinggi yang siap diluncurkan setiap minggu.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+                <button onclick="toggleLoginModal()" class="btn-primary-hero px-8 py-4 flex items-center gap-2 text-sm bg-white text-black rounded-full hover:bg-gray-200 transition">
+                    Dapatkan Akses
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+                <button onclick="document.getElementById('pricing-section').scrollIntoView()" class="btn-secondary-hero px-8 py-4 text-sm bg-transparent border border-white/15 text-white rounded-full hover:bg-white/5 hover:border-white/30 transition">
+                    Lihat Layanan Kami
+                </button>
+            </div>
+        </div>
+
+        <!-- PRICING SECTION -->
+        <div id="pricing-section" class="max-w-[1200px] mx-auto px-6 py-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Creator Starter -->
+                <div class="pricing-card p-8 flex flex-col h-full bg-[#0A0A0B]">
+                    <h3 class="text-xl font-bold text-white mb-2">Creator Starter</h3>
+                    <div class="text-4xl font-bold text-white mb-4">Rp 2.5jt</div>
+                    <div class="inline-flex items-center gap-2 bg-[#2E1065] text-[#A78BFA] px-3 py-1 rounded-md text-xs font-bold mb-6 w-fit">
+                        10.000 Credit <span class="text-zinc-500">|</span> ~25 Video
+                    </div>
+                    <p class="text-sm text-zinc-400 mb-8 leading-relaxed">Pilihan tepat untuk kreator solo yang ingin konsisten upload harian.</p>
+                    <button onclick="checkLoginForTopUp()" class="w-full py-3 rounded-xl border border-white/20 hover:bg-white/5 transition text-white font-semibold">Top Up Credits</button>
+                </div>
+
+                <!-- Content Pro -->
+                <div class="pricing-card best-value p-8 flex flex-col h-full relative bg-[#0F0A1F]">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#7C3AED] text-white text-[10px] font-bold px-4 py-1 rounded-full tracking-wide">BEST VALUE</div>
+                    <h3 class="text-xl font-bold text-white mb-2">Content Pro</h3>
+                    <div class="text-4xl font-bold text-[#A78BFA] mb-4">Rp 5jt</div>
+                    <div class="inline-flex items-center gap-2 bg-white text-black px-3 py-1 rounded-md text-xs font-bold mb-6 w-fit">
+                        25.000 Credit <span class="text-zinc-500">|</span> ~65 Video
+                    </div>
+                    <p class="text-sm text-zinc-400 mb-8 leading-relaxed">Bonus credit lebih banyak + konsultasi mendalam.</p>
+                    <button onclick="checkLoginForTopUp()" class="w-full py-3 rounded-xl bg-[#5B21B6] hover:bg-[#4C1D95] transition text-white font-bold shadow-lg shadow-purple-900/40">Paket Saat Ini</button>
+                </div>
+
+                <!-- Business Elite -->
+                <div class="pricing-card p-8 flex flex-col h-full bg-[#0A0A0B]">
+                    <h3 class="text-xl font-bold text-white mb-2">Business Elite</h3>
+                    <div class="text-4xl font-bold text-white mb-4">Rp 10jt</div>
+                    <div class="inline-flex items-center gap-2 bg-[#2E1065] text-[#A78BFA] px-3 py-1 rounded-md text-xs font-bold mb-6 w-fit">
+                        60.000 Credit <span class="text-zinc-500">|</span> ~150 Video
+                    </div>
+                    <p class="text-sm text-zinc-400 mb-8 leading-relaxed">Solusi skala besar. Full Strategy Support.</p>
+                    <button class="w-full py-3 rounded-xl border border-white/20 hover:bg-white/5 transition text-white font-semibold flex items-center justify-center gap-2">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i> Hubungi Kami
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= VIEW 2: DOWNLOADER (Hidden Initially) ======= -->
+    <section id="view-downloader" class="hidden min-h-screen pt-32 pb-12 px-6 h-screen overflow-y-auto">
         <div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
             <!-- LEFT COLUMN (Video & Controls) -->
             <div class="lg:col-span-2 flex flex-col gap-6">
@@ -411,11 +353,13 @@
                     <div class="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8"></div>
                     <div class="flex flex-col sm:flex-row gap-4 justify-between items-center">
                         <div class="flex gap-4 w-full sm:w-auto">
-                            <button id="auto-clip-btn" disabled class="flex-1 sm:flex-none btn-secondary-pill btn-cyan-hover py-3 px-6 text-sm flex items-center justify-center gap-2">
+                            <!-- BUTTON AUTO CLIP WITH LOGIC -->
+                            <button id="auto-clip-btn" disabled onclick="handleAutoClip()" class="flex-1 sm:flex-none btn-secondary-pill btn-cyan-hover py-3 px-6 text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                                 <i data-lucide="sparkles" class="w-4 h-4"></i>
                                 Auto Clip <span class="ml-1 text-[10px] bg-white/10 px-1 rounded text-zinc-400">10 ⚡</span>
                             </button>
-                            <button id="download-btn" disabled class="flex-1 sm:flex-none btn-secondary-pill btn-green-hover py-3 px-6 text-sm flex items-center justify-center gap-2">
+                            <!-- BUTTON DOWNLOAD WITH LOGIC -->
+                            <button id="download-btn" disabled onclick="handleDownload()" class="flex-1 sm:flex-none btn-secondary-pill btn-green-hover py-3 px-6 text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                                 <i data-lucide="download" class="w-4 h-4"></i>
                                 Download <span class="ml-1 text-[10px] bg-white/10 px-1 rounded text-zinc-400">5 ⚡</span>
                             </button>
@@ -458,337 +402,276 @@
         </div>
     </section>
 
-    <!-- ======= VIEW 2: EDITOR (CapCut Style) ======= -->
-    <section id="view-editor" class="hidden h-screen pt-24 pb-4 px-4 flex-col gap-4 overflow-hidden">
-        <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0">
-            <div class="editor-panel rounded-xl p-4 flex flex-col col-span-1">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                        <i data-lucide="folder-open" class="w-4 h-4 text-brand"></i> Project Media
-                    </h3>
-                    <button class="text-xs bg-white/10 hover:bg-white/20 px-2 py-1 rounded text-white transition">+ Import</button>
+    <!-- ======= VIEW 3: EDITOR (VISUAL SIMULATOR + AI) ======= -->
+    <section id="view-editor" class="hidden h-screen bg-[#121212] flex-col overflow-hidden pt-20">
+        <!-- Main Workspace -->
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Left Toolbar -->
+            <div class="w-16 bg-[#09090b] border-r border-[#27272a] flex flex-col items-center py-4 gap-6 z-20">
+                <button onclick="setTool('media')" class="editor-tool p-2 rounded-lg text-[#00E5FF] bg-[#27272a] hover:text-[#00E5FF] transition" title="Media">
+                    <i data-lucide="folder-open" class="w-5 h-5"></i>
+                    <span class="text-[9px] mt-1">Media</span>
+                </button>
+                <button onclick="setTool('ai-text')" class="editor-tool p-2 rounded-lg text-zinc-400 hover:text-[#00E5FF] transition" title="AI Text">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    <span class="text-[9px] mt-1">AI Text</span>
+                </button>
+                <button onclick="setTool('text')" class="editor-tool p-2 rounded-lg text-zinc-400 hover:text-[#00E5FF] transition" title="Text">
+                    <i data-lucide="type" class="w-5 h-5"></i>
+                    <span class="text-[9px] mt-1">Text</span>
+                </button>
+                 <button onclick="setTool('effects')" class="editor-tool p-2 rounded-lg text-zinc-400 hover:text-[#00E5FF] transition" title="Effects">
+                    <i data-lucide="wand-2" class="w-5 h-5"></i>
+                    <span class="text-[9px] mt-1">Effects</span>
+                </button>
+                <button onclick="setTool('stickers')" class="editor-tool p-2 rounded-lg text-zinc-400 hover:text-[#00E5FF] transition" title="Stickers">
+                    <i data-lucide="smile" class="w-5 h-5"></i>
+                    <span class="text-[9px] mt-1">Stickers</span>
+                </button>
+            </div>
+            <!-- Asset Panel -->
+            <div id="asset-panel" class="w-72 bg-[#18181b] border-r border-[#27272a] flex flex-col transition-all duration-300">
+                <div class="h-12 border-b border-[#27272a] px-4 flex items-center justify-between">
+                    <h3 id="panel-title" class="text-sm font-bold text-white">Media</h3>
+                    <i data-lucide="search" class="w-4 h-4 text-zinc-500"></i>
                 </div>
-                <div class="flex-1 overflow-y-auto custom-scrollbar bg-[#050505]/50 rounded-lg p-2 grid grid-cols-2 gap-2 content-start">
-                    <div class="bg-zinc-800/50 aspect-video rounded border border-white/5 relative group cursor-pointer hover:border-brand/50">
-                        <div class="absolute inset-0 flex items-center justify-center"><i data-lucide="film" class="w-6 h-6 text-zinc-600"></i></div>
-                        <span class="absolute bottom-1 left-1 text-[10px] bg-black/50 px-1 rounded text-white">00:15</span>
-                    </div>
-                    <div class="bg-zinc-800/50 aspect-video rounded border border-white/5 relative group cursor-pointer hover:border-brand/50 border-dashed flex items-center justify-center">
-                        <span class="text-xs text-zinc-500">Drag files here</span>
-                   </div>
+                <div id="panel-content" class="flex-1 overflow-y-auto custom-scrollbar p-3 grid grid-cols-2 gap-2 content-start"></div>
+                <!-- AI Text Input -->
+                <div id="ai-text-input-area" class="hidden p-4 border-t border-[#27272a]">
+                    <textarea id="ai-prompt" placeholder="Topik: Tips Sukses..." class="w-full bg-[#09090b] border border-[#27272a] rounded p-2 text-sm text-white mb-2 h-20 resize-none focus:border-[#00E5FF] outline-none"></textarea>
+                    <button onclick="generateAIText()" class="w-full bg-[#00E5FF] hover:bg-[#00c4d9] text-black font-bold py-2 rounded text-sm transition">Generate (2 ⚡)</button>
                 </div>
             </div>
-            <div class="editor-panel rounded-xl col-span-2 flex flex-col relative overflow-hidden bg-black">
-                <div class="flex-1 flex items-center justify-center bg-[#050505] relative">
-                    <div class="text-zinc-700 flex flex-col items-center">
-                         <i data-lucide="monitor-play" class="w-12 h-12 mb-2 opacity-50"></i>
-                         <p class="text-xs">Preview Window</p>
-                    </div>
-                    <div class="absolute bottom-4 text-brand font-mono text-sm font-bold tracking-widest bg-black/50 px-3 py-1 rounded-full border border-white/10">
-                        00:00:00:00
+            <!-- Canvas -->
+            <div class="flex-1 bg-[#09090b] flex flex-col relative">
+                <div class="flex-1 flex items-center justify-center p-8 overflow-hidden bg-[#050505] relative" id="canvas-wrapper">
+                    <div id="video-canvas" class="aspect-video bg-black relative shadow-2xl overflow-hidden group border border-white/5" style="height: 70%;">
+                        <div id="canvas-video-layer" class="w-full h-full bg-[#1a1a1a] flex items-center justify-center overflow-hidden relative">
+                            <div class="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&q=80')] bg-cover bg-center"></div>
+                            <i data-lucide="play-circle" class="w-16 h-16 text-white opacity-20 relative z-10"></i>
+                        </div>
+                        <div id="canvas-overlays" class="absolute inset-0 z-20"></div>
+                        <div id="canvas-filter-layer" class="absolute inset-0 pointer-events-none transition-all duration-300 mix-blend-overlay z-10"></div>
                     </div>
                 </div>
-                <div class="h-12 border-t border-white/10 bg-[#0A0A0B] flex items-center justify-center gap-4">
-                    <button class="text-zinc-400 hover:text-white"><i data-lucide="skip-back" class="w-4 h-4"></i></button>
-                    <button class="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center hover:bg-brand/80"><i data-lucide="play" class="w-4 h-4 fill-current"></i></button>
-                    <button class="text-zinc-400 hover:text-white"><i data-lucide="skip-forward" class="w-4 h-4"></i></button>
+                <div class="h-12 border-t border-[#27272a] bg-[#09090b] flex items-center justify-between px-6">
+                    <span id="time-display" class="text-xs font-mono text-[#00E5FF]">00:00:00</span>
+                    <div class="flex items-center gap-4">
+                        <button class="text-zinc-400 hover:text-white"><i data-lucide="skip-back" class="w-4 h-4"></i></button>
+                        <button id="btn-play-pause" onclick="togglePlay()" class="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:bg-[#00E5FF] transition"><i data-lucide="play" class="w-4 h-4 fill-current ml-0.5"></i></button>
+                        <button class="text-zinc-400 hover:text-white"><i data-lucide="skip-forward" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="monitor" class="w-3 h-3 text-zinc-500"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- Property Panel -->
+            <div id="property-panel" class="w-64 bg-[#18181b] border-l border-[#27272a] flex flex-col p-4 hidden">
+                <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">Properties</h3>
+                <div class="space-y-4">
+                    <div><label class="text-xs text-zinc-500 mb-1 block">Text Content</label><input type="text" id="prop-text-input" class="w-full bg-[#09090b] border border-[#27272a] rounded px-2 py-1 text-sm text-white focus:border-[#00E5FF] outline-none"></div>
+                    <div><label class="text-xs text-zinc-500 mb-1 block">Color</label><div class="flex gap-2"><div onclick="changeColor('#FFFFFF')" class="w-6 h-6 rounded-full bg-white cursor-pointer border border-white/20"></div><div onclick="changeColor('#FF5555')" class="w-6 h-6 rounded-full bg-[#FF5555] cursor-pointer border border-white/20"></div><div onclick="changeColor('#55FF55')" class="w-6 h-6 rounded-full bg-[#55FF55] cursor-pointer border border-white/20"></div><div onclick="changeColor('#00E5FF')" class="w-6 h-6 rounded-full bg-[#00E5FF] cursor-pointer border border-white/20"></div><div onclick="changeColor('#FFFF55')" class="w-6 h-6 rounded-full bg-[#FFFF55] cursor-pointer border border-white/20"></div></div></div>
+                    <div><label class="text-xs text-zinc-500 mb-1 block">Size</label><input type="range" id="prop-size-input" min="10" max="100" class="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer"></div>
                 </div>
             </div>
         </div>
-        <div class="h-1/3 editor-panel rounded-xl flex flex-col min-h-[200px]">
-            <div class="h-10 border-b border-white/5 px-4 flex items-center gap-4 bg-[#0A0A0B] rounded-t-xl">
-                <div class="flex items-center gap-2 border-r border-white/10 pr-4">
-                    <button class="p-1.5 hover:bg-white/10 rounded text-zinc-400 hover:text-white" title="Split"><i data-lucide="scissors" class="w-4 h-4"></i></button>
-                    <button class="p-1.5 hover:bg-white/10 rounded text-zinc-400 hover:text-white" title="Delete"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+        <!-- Timeline -->
+        <div class="h-64 bg-[#09090b] border-t border-[#27272a] flex flex-col">
+            <div class="h-10 border-b border-[#27272a] px-4 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="flex gap-1 border-r border-[#27272a] pr-4"><button class="p-1.5 rounded text-zinc-400 hover:text-white hover:bg-white/10" title="Undo"><i data-lucide="undo-2" class="w-4 h-4"></i></button><button class="p-1.5 rounded text-zinc-400 hover:text-white hover:bg-white/10" title="Redo"><i data-lucide="redo-2" class="w-4 h-4"></i></button></div>
+                    <div class="flex gap-1"><button class="p-1.5 rounded text-zinc-400 hover:text-white hover:bg-white/10" title="Split"><i data-lucide="scissors" class="w-4 h-4"></i></button><button class="p-1.5 rounded text-zinc-400 hover:text-red-400 hover:bg-white/10" title="Delete"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>
                 </div>
-                <div class="flex-1"></div>
-                <div class="flex items-center gap-2">
-                     <span class="text-xs text-zinc-500">Zoom</span>
-                     <input type="range" class="w-24 h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer">
-                </div>
+                <div class="flex items-center gap-2"><i data-lucide="minus" class="w-3 h-3 text-zinc-500"></i><input type="range" class="w-24 h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer"><i data-lucide="plus" class="w-3 h-3 text-zinc-500"></i></div>
             </div>
-            <div class="flex-1 overflow-x-auto overflow-y-hidden relative custom-scrollbar bg-[#0f0f11] m-1 rounded">
-                <div class="h-6 border-b border-white/5 w-[2000px] bg-[#0A0A0B] flex items-end text-[10px] text-zinc-500 font-mono relative">
-                    <div class="absolute left-0 bottom-0 border-l border-zinc-700 h-2 pl-1">00:00</div>
-                    <div class="absolute left-[100px] bottom-0 border-l border-zinc-700 h-2 pl-1">00:05</div>
-                    <div class="absolute left-[200px] bottom-0 border-l border-zinc-700 h-2 pl-1">00:10</div>
-                    <div class="absolute left-[300px] bottom-0 border-l border-zinc-700 h-2 pl-1">00:15</div>
-                    <div class="playhead" style="left: 0px;">
-                        <div class="playhead-head"></div>
-                    </div>
-                </div>
-                <div class="h-24 relative mt-2 w-[2000px] border-b border-white/5 bg-[#050505]/50">
-                    <div class="absolute left-0 top-2 bottom-2 w-[300px] clip-element rounded overflow-hidden cursor-pointer group">
-                        <div class="w-full h-full opacity-30 bg-[url('https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg')] bg-repeat-x bg-contain"></div>
-                        <div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white drop-shadow-md">Video Track 1</div>
-                        <div class="absolute left-0 top-0 bottom-0 w-2 bg-white/20 cursor-ew-resize hover:bg-white/50"></div>
-                        <div class="absolute right-0 top-0 bottom-0 w-2 bg-white/20 cursor-ew-resize hover:bg-white/50"></div>
-                    </div>
-                </div>
-                <div class="h-16 relative mt-1 w-[2000px] border-b border-white/5 bg-[#050505]/50">
-                     <div class="absolute left-0 top-2 bottom-2 w-[300px] bg-cyan-900/40 border border-cyan-500/30 rounded flex items-center px-2">
-                        <div class="w-full h-4 bg-cyan-500/20 rounded-sm overflow-hidden">
-                             <div class="w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjE2Ij48cmVjdCB4PSIwIiB5PSI0IiB3aWR0aD0iMiIgaGVpZ2h0PSI4IiBmaWxsPSIjMjJkM2VlIiAvPjwvc3ZnPg==')] opacity-50"></div>
-                        </div>
-                     </div>
-                </div>
+            <div class="flex-1 overflow-x-auto overflow-y-hidden relative custom-scrollbar bg-[#121212] m-1 rounded-lg">
+                <div class="h-6 w-[2000px] border-b border-[#27272a] relative timeline-ruler flex items-end text-[10px] text-zinc-500 font-mono"><span class="absolute left-2">00:00</span><span class="absolute left-24">00:05</span><span class="absolute left-48">00:10</span><span class="absolute left-72">00:15</span><span class="absolute left-96">00:20</span></div>
+                <div id="editor-playhead" class="absolute top-0 bottom-0 left-4 w-[1px] bg-white z-50 pointer-events-none transition-transform duration-100 ease-linear"><div class="absolute -top-0 -left-[5px] w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[8px] border-t-white"></div></div>
+                <div class="h-16 relative mt-2 w-[2000px] bg-[#18181b]/50 border-b border-[#27272a] group"><div class="absolute left-0 top-0 bottom-0 w-8 bg-[#27272a] border-r border-[#3f3f46] flex items-center justify-center z-10"><i data-lucide="video" class="w-3 h-3 text-zinc-500"></i></div><div class="absolute left-4 top-1 bottom-1 w-[300px] bg-[#2A2A35] border-x-2 border-[#00E5FF] rounded overflow-hidden cursor-grab active:cursor-grabbing hover:bg-[#323242]"><div class="w-full h-full opacity-30 bg-[url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=200&q=80')] bg-cover bg-center"></div><div class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white drop-shadow-md pointer-events-none">Main Video.mp4</div></div></div>
+                <div id="track-text" class="h-8 relative mt-1 w-[2000px] bg-[#18181b]/30 border-b border-[#27272a] flex items-center"><div class="absolute left-0 top-0 bottom-0 w-8 bg-[#27272a] border-r border-[#3f3f46] flex items-center justify-center z-10"><i data-lucide="type" class="w-3 h-3 text-zinc-500"></i></div></div>
+                <div class="h-8 relative mt-1 w-[2000px] bg-[#18181b]/30 border-b border-[#27272a] flex items-center"><div class="absolute left-0 top-0 bottom-0 w-8 bg-[#27272a] border-r border-[#3f3f46] flex items-center justify-center z-10"><i data-lucide="music" class="w-3 h-3 text-zinc-500"></i></div><div class="absolute left-4 top-1 bottom-1 w-[300px] bg-[#0e4e57] rounded border border-[#00E5FF]/30"></div></div>
             </div>
         </div>
     </section>
-
-    <!-- LOGIN MODAL -->
-    <div id="modal-login" class="modal-overlay fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
-        <div class="glass-modal w-full max-w-md rounded-2xl p-8 relative overflow-hidden">
-            <div class="absolute -top-20 -right-20 w-40 h-40 bg-brand/20 rounded-full blur-3xl pointer-events-none"></div>
-            <button onclick="toggleLoginModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            <div class="text-center mb-8">
-                <span class="font-bold text-2xl tracking-tight text-white block mb-2">CLIPZ<span class="text-brand">.</span> ID</span>
-                <p class="text-sm text-zinc-400">Masuk untuk mengakses Dashboard & Credit</p>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-zinc-400 mb-1.5">Email</label>
-                    <input id="login-email" type="email" placeholder="nama@email.com" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brand/50 transition">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-zinc-400 mb-1.5">Password</label>
-                    <input id="login-password" type="password" placeholder="••••••••" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brand/50 transition">
-                </div>
-                
-                <div id="login-error" class="hidden text-red-500 text-xs text-center bg-red-500/10 p-2 rounded">
-                    Email atau password salah!
-                </div>
-
-                <button id="btn-submit-login" onclick="login()" class="w-full bg-brand hover:bg-brand/90 text-white font-bold py-3 rounded-lg shadow-lg shadow-brand/20 transition flex items-center justify-center gap-2">
-                    <span>Masuk Sekarang</span>
-                </button>
-            </div>
-            <p class="text-center text-xs text-zinc-500 mt-6">Belum punya akun? <a href="#" class="text-brand hover:underline">Daftar Gratis</a></p>
-        </div>
-    </div>
 
     <!-- PRICING / TOP UP MODAL -->
     <div id="modal-pricing" class="modal-overlay fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
         <div class="glass-modal w-full max-w-5xl rounded-3xl p-8 relative overflow-hidden h-[85vh] overflow-y-auto custom-scrollbar bg-[#020202]">
             <button onclick="togglePricingModal()" class="absolute top-6 right-6 text-zinc-500 hover:text-white z-10"><i data-lucide="x" class="w-6 h-6"></i></button>
-            
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-white mb-3">Top Up <span class="text-brand">Credit</span></h2>
-                <p class="text-zinc-400 max-w-lg mx-auto">Pilih paket credit yang sesuai untuk kebutuhan editing otomatis Anda.</p>
-            </div>
-
+            <div class="text-center mb-10"><h2 class="text-3xl font-bold text-white mb-3">Top Up <span class="text-brand">Credit</span></h2><p class="text-zinc-400 max-w-lg mx-auto">Pilih paket credit yang sesuai.</p></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Card 1: Creator Starter -->
-                <div class="pricing-card p-6 flex flex-col h-full bg-[#0A0A0B]">
-                    <h3 class="text-lg font-bold text-white mb-2">Creator Starter</h3>
-                    <div class="text-3xl font-bold text-white mb-4">Rp 2.5jt</div>
-                    <div class="inline-flex items-center gap-2 bg-[#2E1065] text-[#A78BFA] px-3 py-1 rounded-md text-xs font-bold mb-6 w-fit">
-                        10.000 Credit <span class="text-zinc-500">|</span> ~25 Video
-                    </div>
-                    <p class="text-xs text-zinc-400 mb-6 leading-relaxed">
-                        Pilihan tepat untuk kreator solo yang ingin konsisten upload harian.
-                    </p>
-                    <div class="space-y-3 mb-6 flex-1">
-                        <div class="flex gap-2 text-xs text-zinc-300">
-                            <i data-lucide="zap" class="w-3.5 h-3.5 text-[#A78BFA] shrink-0"></i> 400 Credit <span class="text-zinc-500">/ Video</span>
-                        </div>
-                        <div class="flex gap-2 text-xs text-zinc-300"><i data-lucide="check" class="w-3.5 h-3.5 text-white shrink-0"></i> Dynamic Captioning</div>
-                        <div class="flex gap-2 text-xs text-zinc-300"><i data-lucide="check" class="w-3.5 h-3.5 text-white shrink-0"></i> Revisi Ringan (Free)</div>
-                    </div>
-                    <button onclick="initiatePayment(10000, 2500000, 'Creator Starter')" class="w-full py-2.5 rounded-xl border border-white/20 hover:bg-white/5 transition text-white text-sm font-semibold">Top Up Credits</button>
-                </div>
-
-                <!-- Card 2: Content Pro -->
-                <div class="pricing-card best-value p-6 flex flex-col h-full relative bg-[#0F0A1F]">
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#7C3AED] text-white text-[9px] font-bold px-3 py-1 rounded-full tracking-wide">BEST VALUE</div>
-                    <h3 class="text-lg font-bold text-white mb-2">Content Pro</h3>
-                    <div class="text-3xl font-bold text-[#A78BFA] mb-4">Rp 5jt</div>
-                    <div class="inline-flex items-center gap-2 bg-white text-black px-3 py-1 rounded-md text-xs font-bold mb-6 w-fit">
-                        25.000 Credit <span class="text-zinc-500">|</span> ~65 Video
-                    </div>
-                    <p class="text-xs text-zinc-400 mb-6 leading-relaxed">
-                        Bonus credit lebih banyak + konsultasi mendalam.
-                    </p>
-                    <div class="space-y-3 mb-6 flex-1">
-                        <div class="flex gap-2 text-xs text-white font-medium">
-                            <i data-lucide="gift" class="w-3.5 h-3.5 text-yellow-400 shrink-0"></i> Bonus 5.000 Credit
-                        </div>
-                        <div class="flex gap-2 text-xs text-zinc-300">
-                            <i data-lucide="user-check" class="w-3.5 h-3.5 text-[#A78BFA] shrink-0"></i> Creative Counseling
-                        </div>
-                        <div class="flex gap-2 text-xs text-zinc-300"><i data-lucide="check" class="w-3.5 h-3.5 text-[#A78BFA] shrink-0"></i> Prioritas Antrian</div>
-                    </div>
-                    <button onclick="initiatePayment(25000, 5000000, 'Content Pro')" class="w-full py-2.5 rounded-xl bg-[#5B21B6] hover:bg-[#4C1D95] transition text-white text-sm font-bold shadow-lg shadow-purple-900/40">Paket Saat Ini</button>
-                </div>
-
-                <!-- Card 3: Business Elite -->
-                <div class="pricing-card p-6 flex flex-col h-full bg-[#0A0A0B]">
-                    <h3 class="text-lg font-bold text-white mb-2">Business Elite</h3>
-                    <div class="text-3xl font-bold text-white mb-4">Rp 10jt</div>
-                    <div class="inline-flex items-center gap-2 bg-[#2E1065] text-[#A78BFA] px-3 py-1 rounded-md text-xs font-bold mb-6 w-fit">
-                        60.000 Credit <span class="text-zinc-500">|</span> ~150 Video
-                    </div>
-                    <p class="text-xs text-zinc-400 mb-6 leading-relaxed">
-                        Solusi skala besar. Full Strategy Support.
-                    </p>
-                    <div class="space-y-3 mb-6 flex-1">
-                        <div class="flex gap-2 text-xs text-white">
-                            <i data-lucide="trending-up" class="w-3.5 h-3.5 text-[#A78BFA] shrink-0"></i> Weekly Strategy Call
-                        </div>
-                        <div class="flex gap-2 text-xs text-zinc-300"><i data-lucide="check" class="w-3.5 h-3.5 text-zinc-500 shrink-0"></i> Dedicated Manager</div>
-                        <div class="flex gap-2 text-xs text-zinc-300"><i data-lucide="check" class="w-3.5 h-3.5 text-zinc-500 shrink-0"></i> Full Channel Audit</div>
-                        <div class="flex gap-2 text-xs text-zinc-300"><i data-lucide="check" class="w-3.5 h-3.5 text-zinc-500 shrink-0"></i> Repurpose Long-form</div>
-                    </div>
-                    <button onclick="initiatePayment(60000, 10000000, 'Business Elite')" class="w-full py-2.5 rounded-xl border border-white/20 hover:bg-white/5 transition text-white text-sm font-semibold flex items-center justify-center gap-2">
-                        <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Hubungi Kami
-                    </button>
-                </div>
+                <div class="pricing-card p-6 flex flex-col h-full bg-[#0A0A0B]"><h3 class="text-lg font-bold text-white mb-2">Creator Starter</h3><div class="text-3xl font-bold text-white mb-4">Rp 2.5jt</div><div class="inline-flex items-center gap-2 bg-[#2E1065] text-[#A78BFA] px-3 py-1 rounded-md text-xs font-bold mb-6 w-fit">10.000 Credit</div><button onclick="initiatePayment(10000, 2500000, 'Creator Starter')" class="w-full py-2.5 rounded-xl border border-white/20 hover:bg-white/5 transition text-white text-sm font-semibold">Top Up Credits</button></div>
+                <div class="pricing-card best-value p-6 flex flex-col h-full relative bg-[#0F0A1F]"><div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#7C3AED] text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wide">BEST VALUE</div><h3 class="text-lg font-bold text-white mb-2">Content Pro</h3><div class="text-3xl font-bold text-[#A78BFA] mb-4">Rp 5jt</div><div class="inline-flex items-center gap-2 bg-white text-black px-3 py-1 rounded-md text-xs font-bold mb-6 w-fit">25.000 Credit</div><button onclick="initiatePayment(25000, 5000000, 'Content Pro')" class="w-full py-2.5 rounded-xl bg-[#5B21B6] hover:bg-[#4C1D95] transition text-white text-sm font-bold shadow-lg shadow-purple-900/40">Paket Saat Ini</button></div>
+                <div class="pricing-card p-6 flex flex-col h-full bg-[#0A0A0B]"><h3 class="text-lg font-bold text-white mb-2">Business Elite</h3><div class="text-3xl font-bold text-white mb-4">Rp 10jt</div><div class="inline-flex items-center gap-2 bg-[#2E1065] text-[#A78BFA] px-3 py-1 rounded-md text-xs font-bold mb-6 w-fit">60.000 Credit</div><button onclick="initiatePayment(60000, 10000000, 'Business Elite')" class="w-full py-2.5 rounded-xl border border-white/20 hover:bg-white/5 transition text-white text-sm font-semibold flex items-center justify-center gap-2">Hubungi Kami</button></div>
             </div>
         </div>
     </div>
 
-    <!-- PAYMENT MODAL (Checkout) -->
+    <!-- PAYMENT MODAL -->
     <div id="modal-payment" class="modal-overlay fixed inset-0 z-[70] hidden flex items-center justify-center p-4">
         <div class="glass-modal w-full max-w-md rounded-2xl p-6 relative overflow-hidden">
             <button onclick="togglePaymentModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            
-            <div class="mb-6">
-                <h3 class="text-xl font-bold text-white mb-1">Rincian Pembayaran</h3>
-                <p class="text-xs text-zinc-400">Selesaikan pembayaran untuk menambah credit.</p>
-            </div>
-
+            <div class="mb-6"><h3 class="text-xl font-bold text-white mb-1">Rincian Pembayaran</h3><p class="text-xs text-zinc-400">Selesaikan pembayaran untuk menambah credit.</p></div>
             <div class="bg-white/5 rounded-xl p-4 mb-6 border border-white/10">
-                <div class="flex justify-between mb-2">
-                    <span class="text-sm text-zinc-400">Paket</span>
-                    <span id="pay-package-name" class="text-sm font-bold text-white">Creator Starter</span>
-                </div>
-                <div class="flex justify-between mb-4">
-                    <span class="text-sm text-zinc-400">Credit</span>
-                    <span id="pay-credit-amount" class="text-sm text-brand font-bold">10.000</span>
-                </div>
+                <div class="flex justify-between mb-2"><span class="text-sm text-zinc-400">Paket</span><span id="pay-package-name" class="text-sm font-bold text-white"></span></div>
+                <div class="flex justify-between mb-4"><span class="text-sm text-zinc-400">Credit</span><span id="pay-credit-amount" class="text-sm text-brand font-bold"></span></div>
                 <div class="h-px bg-white/10 mb-4"></div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-zinc-300">Total Bayar</span>
-                    <span id="pay-total-price" class="text-2xl font-bold text-white">Rp 2.500.000</span>
-                </div>
+                <div class="flex justify-between items-center"><span class="text-sm text-zinc-300">Total Bayar</span><span id="pay-total-price" class="text-2xl font-bold text-white"></span></div>
             </div>
-
-            <div class="mb-6">
-                <p class="text-xs text-zinc-500 mb-3 font-semibold uppercase tracking-wider">Metode Pembayaran</p>
-                <div class="flex gap-3">
-                    <div class="flex-1 bg-white/10 border border-brand/50 rounded-lg p-3 flex flex-col items-center justify-center cursor-pointer hover:bg-white/20 transition">
-                        <i data-lucide="qr-code" class="w-6 h-6 text-white mb-1"></i>
-                        <span class="text-xs text-zinc-300">QRIS</span>
-                    </div>
-                    <div class="flex-1 bg-white/5 border border-white/10 rounded-lg p-3 flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition opacity-50">
-                        <i data-lucide="credit-card" class="w-6 h-6 text-white mb-1"></i>
-                        <span class="text-xs text-zinc-300">Transfer</span>
-                    </div>
-                </div>
-            </div>
-
-            <button id="btn-confirm-payment" onclick="processPayment()" class="w-full bg-brand hover:bg-brand/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-brand/20 transition flex items-center justify-center gap-2">
-                Bayar Sekarang
-            </button>
+            <button id="btn-confirm-payment" onclick="processPayment()" class="w-full bg-brand hover:bg-brand/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-brand/20 transition flex items-center justify-center gap-2">Bayar Sekarang</button>
         </div>
     </div>
 
     <!-- SUCCESS MODAL -->
     <div id="modal-success" class="modal-overlay fixed inset-0 z-[80] hidden flex items-center justify-center p-4">
         <div class="glass-modal w-full max-w-sm rounded-2xl p-8 relative overflow-hidden text-center">
-            <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-checkmark">
-                <i data-lucide="check" class="w-10 h-10 text-green-500"></i>
-            </div>
+            <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-checkmark"><i data-lucide="check" class="w-10 h-10 text-green-500"></i></div>
             <h3 class="text-2xl font-bold text-white mb-2">Pembayaran Berhasil!</h3>
             <p class="text-sm text-zinc-400 mb-6">Saldo credit Anda telah berhasil ditambahkan.</p>
-            <button onclick="closeSuccessModal()" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-xl transition">
-                Kembali ke Dashboard
-            </button>
+            <button onclick="closeSuccessModal()" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-xl transition">Kembali ke Dashboard</button>
+        </div>
+    </div>
+
+    <!-- LOGIN MODAL -->
+    <div id="modal-login" class="modal-overlay fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
+        <div class="glass-modal w-full max-w-md rounded-2xl p-8 relative overflow-hidden">
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-brand/20 rounded-full blur-3xl pointer-events-none"></div>
+            <button onclick="toggleLoginModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="text-center mb-8"><span class="font-bold text-2xl tracking-tight text-white block mb-2">CLIPZ<span class="text-brand">.</span> ID</span><p class="text-sm text-zinc-400">Masuk untuk mengakses Dashboard & Credit</p></div>
+            <div class="space-y-4">
+                <div><label class="block text-xs font-medium text-zinc-400 mb-1.5">Email</label><input id="login-email" type="email" placeholder="nama@email.com" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brand/50 transition"></div>
+                <div><label class="block text-xs font-medium text-zinc-400 mb-1.5">Password</label><input id="login-password" type="password" placeholder="••••••••" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brand/50 transition"></div>
+                <div id="login-error" class="hidden text-red-500 text-xs text-center bg-red-500/10 p-2 rounded">Email atau password salah!</div>
+                <button id="btn-submit-login" onclick="login()" class="w-full bg-brand hover:bg-brand/90 text-white font-bold py-3 rounded-lg shadow-lg shadow-brand/20 transition flex items-center justify-center gap-2"><span>Masuk Sekarang</span></button>
+            </div>
+            <p class="text-center text-xs text-zinc-500 mt-6">Belum punya akun? <a href="#" class="text-brand hover:underline">Daftar Gratis</a></p>
         </div>
     </div>
 
     <!-- LOGIC -->
+    <script type="module">
+      import { GoogleGenerativeAI } from "@google/generative-ai";
+      const apiKey = ""; 
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-09-2025" });
+
+      window.generateAIText = async function() {
+        const promptInput = document.getElementById('ai-prompt').value;
+        if (!promptInput) return alert("Masukkan topik dulu!");
+        if (window.userCredits < 2) return alert("Credit tidak cukup!");
+        
+        window.userCredits -= 2;
+        window.updateCreditDisplay();
+
+        const btn = event.target;
+        const originalText = btn.innerText;
+        btn.innerText = "Generating...";
+        btn.disabled = true;
+
+        try {
+            const result = await model.generateContent(promptInput + " (Buat 1 kalimat singkat inspiratif maksimal 5 kata untuk video)");
+            const text = result.response.text().trim();
+            window.addTextToCanvas(text, 'text-4xl text-white font-bold');
+        } catch (error) {
+            console.error(error);
+            alert("Gagal generate text.");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+      }
+    </script>
+
     <script>
         lucide.createIcons();
         let player;
-        let userCredits = 500; 
+        window.userCredits = 500;
         let pendingCredit = 0;
+        let activeTool = 'media';
+        let isPlaying = false;
+        let playheadPosition = 0;
+        let playInterval;
+        let selectedElement = null;
+        let isLoggedIn = false;
+        let currentVideoId = null;
+        let currentVideoTitle = "";
+        let videoDuration = 0;
+        let clipsData = [];
 
-        function updateCreditDisplay() {
+        window.updateCreditDisplay = function() {
             const el = document.getElementById('credit-balance');
-            if(el) el.innerText = userCredits.toLocaleString();
+            const navbarCredit = document.getElementById('navbar-credit');
+            const displayValue = window.userCredits.toLocaleString();
+            if(el) el.innerText = displayValue;
+            if(navbarCredit) navbarCredit.innerText = displayValue;
         }
 
         // --- PAYMENT LOGIC ---
-        function initiatePayment(creditAmount, price, packageName) {
+        window.initiatePayment = function(creditAmount, price, packageName) {
             pendingCredit = creditAmount;
             document.getElementById('pay-package-name').innerText = packageName;
             document.getElementById('pay-credit-amount').innerText = creditAmount.toLocaleString();
             document.getElementById('pay-total-price').innerText = 'Rp ' + price.toLocaleString();
-            
-            togglePricingModal(); // Close pricing
-            togglePaymentModal(); // Open payment
+            togglePricingModal();
+            togglePaymentModal();
         }
-
-        function togglePaymentModal() {
-            document.getElementById('modal-payment').classList.toggle('hidden');
-        }
-
-        function processPayment() {
+        window.togglePaymentModal = function() { document.getElementById('modal-payment').classList.toggle('hidden'); }
+        window.togglePricingModal = function() { document.getElementById('modal-pricing').classList.toggle('hidden'); }
+        window.processPayment = function() {
             const btn = document.getElementById('btn-confirm-payment');
             const originalText = btn.innerHTML;
-            
-            // Loading Animation
             btn.disabled = true;
             btn.innerHTML = `<div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> Memproses...`;
-
             setTimeout(() => {
-                // Success Logic
-                userCredits += pendingCredit;
+                window.userCredits += pendingCredit;
                 updateCreditDisplay();
-                
-                togglePaymentModal(); // Close payment
-                document.getElementById('modal-success').classList.remove('hidden'); // Show success
-                
-                // Reset Button
+                togglePaymentModal();
+                document.getElementById('modal-success').classList.remove('hidden');
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }, 2000);
         }
+        window.closeSuccessModal = function() { document.getElementById('modal-success').classList.add('hidden'); }
 
-        function closeSuccessModal() {
-            document.getElementById('modal-success').classList.add('hidden');
+        window.checkLoginForTopUp = function() {
+            if (!isLoggedIn) {
+                toggleLoginModal();
+            } else {
+                togglePricingModal();
+            }
         }
 
-        // --- NAVIGATION & AUTH LOGIC ---
-        function switchView(viewName, sectionId = null) {
-            ['downloader', 'editor'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
+        // --- NAVIGATION & AUTH ---
+        window.switchView = function(viewName, sectionId = null) {
+            if (!isLoggedIn && viewName !== 'landing') { toggleLoginModal(); return; } 
+            ['landing', 'downloader', 'editor'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden'));
             const target = document.getElementById(`view-${viewName}`);
             target.classList.remove('hidden');
-            if (viewName === 'editor') target.classList.add('flex');
+            if (viewName === 'editor') {
+                target.classList.add('flex');
+                window.setTool('media');
+            }
+            if (sectionId) setTimeout(() => document.getElementById(`${sectionId}-section`).scrollIntoView({behavior: 'smooth'}), 100);
         }
-
-        function toggleLoginModal() { document.getElementById('modal-login').classList.toggle('hidden'); }
-        function togglePricingModal() { document.getElementById('modal-pricing').classList.toggle('hidden'); }
-
-        function login() {
+        window.toggleLoginModal = function() { document.getElementById('modal-login').classList.toggle('hidden'); }
+        window.login = function() {
             const emailInput = document.getElementById('login-email').value;
             const passInput = document.getElementById('login-password').value;
             const errorMsg = document.getElementById('login-error');
             const submitBtn = document.getElementById('btn-submit-login');
-
             errorMsg.classList.add('hidden');
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> Connecting...`;
-
             setTimeout(() => {
                 if (emailInput === 'jokosamsul@gmail.com' && passInput === '123456') {
+                    isLoggedIn = true;
                     toggleLoginModal();
-                    switchView('downloader');
+                    switchView('downloader'); 
                     document.getElementById('btn-login-trigger').classList.add('hidden');
                     document.getElementById('user-profile-trigger').classList.remove('hidden');
                     document.getElementById('user-profile-trigger').classList.add('flex');
-                    
+                    document.getElementById('nav-edit-dropdown').classList.remove('hidden'); // Show Edit Menu
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = `<span>Masuk Sekarang</span>`;
                     updateCreditDisplay();
@@ -799,40 +682,249 @@
                 }
             }, 1500);
         }
-
-        function logout() {
-            document.getElementById('view-downloader').classList.add('hidden');
-            document.getElementById('view-editor').classList.add('hidden');
+        window.logout = function() {
+            isLoggedIn = false;
+            switchView('landing');
             document.getElementById('btn-login-trigger').classList.remove('hidden');
             document.getElementById('user-profile-trigger').classList.add('hidden');
             document.getElementById('user-profile-trigger').classList.remove('flex');
-            toggleLoginModal();
+            document.getElementById('nav-edit-dropdown').classList.add('hidden'); // Hide Edit Menu
         }
 
+        // --- CREDIT USAGE LOGIC ---
+        window.handleAutoClip = function() {
+            if (!isLoggedIn) { toggleLoginModal(); return; }
+            if (window.userCredits >= 10) {
+                window.userCredits -= 10;
+                updateCreditDisplay();
+                document.getElementById('empty-state').classList.add('hidden');
+                document.getElementById('loading-state').classList.remove('hidden');
+                setTimeout(async () => {
+                    document.getElementById('loading-state').classList.add('hidden');
+                    const suggestions = await getSimulatedAIClips(currentVideoTitle || "Video Content", videoDuration || 600);
+                    clipsData = suggestions;
+                    renderClips(clipsData);
+                }, 1500);
+            } else {
+                alert("Saldo credit tidak cukup! Silakan Top Up.");
+                togglePricingModal();
+            }
+        }
+
+        window.handleDownload = function() {
+            if (!isLoggedIn) { toggleLoginModal(); return; }
+            if (window.userCredits >= 5) {
+                window.userCredits -= 5;
+                updateCreditDisplay();
+                alert("Memulai download video...");
+            } else {
+                alert("Saldo credit tidak cukup! Silakan Top Up.");
+                togglePricingModal();
+            }
+        }
+
+        // --- NEW SIMULATION LOGIC ---
+        const getSimulatedAIClips = (title, duration) => {
+            const keyPhrases = title.split(/ dan | vs | tentang |,|\|/i).map(s => s.trim()).filter(s => s.length > 3);
+            const fallbackTitles = ["Poin Argumen Utama", "Fakta Penting", "Titik Balik Cerita", "Penjelasan Kompleks", "Statistik Kunci", "Momen Krusial"];
+            const formatTime = (s) => new Date(s * 1000).toISOString().substr(14, 5);
+            const generatedClips = [];
+            const numClips = Math.min(Math.floor(duration / 60) + 2, 8); 
+            const bucketSize = duration / numClips;
+            for (let i = 0; i < numClips; i++) {
+                const clipTitle = keyPhrases[i] || fallbackTitles[i % fallbackTitles.length];
+                const clipDuration = Math.floor(Math.random() * 31) + 20; 
+                const start = (i * bucketSize) + (Math.random() * (bucketSize - clipDuration));
+                generatedClips.push({ title: clipTitle, start: formatTime(start), end: formatTime(start + clipDuration), durationSeconds: clipDuration, startSeconds: start });
+            }
+            return new Promise(resolve => setTimeout(() => resolve(generatedClips), 1500));
+        };
+
+        const renderClips = () => {
+            const container = document.getElementById('clip-list-container');
+            container.innerHTML = clipsData.length > 0 ? clipsData.map((clip, index) => `
+                <div class="bg-white/5 p-3 rounded-xl border border-white/5 hover:border-brand/30 hover:bg-white/10 transition cursor-pointer flex gap-3 items-start group" onclick="seekTo(${clip.startSeconds})">
+                    <div class="w-24 h-14 bg-black rounded-lg overflow-hidden flex-shrink-0 relative">
+                        <img src="https://img.youtube.com/vi/${currentVideoId}/mqdefault.jpg" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition">
+                        <div class="absolute bottom-0.5 right-0.5 bg-black/80 px-1 rounded text-[8px] text-white">${clip.durationSeconds}s</div>
+                    </div>
+                    <div class="flex-grow pt-1 min-w-0">
+                        <h4 class="font-bold text-zinc-200 text-sm truncate group-hover:text-brand transition">${clip.title}</h4>
+                        <p class="text-[10px] text-zinc-500 mt-1">Timestamp: ${clip.start} - ${clip.end}</p>
+                    </div>
+                    <div class="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition">
+                        <button class="text-zinc-500 hover:text-white p-1" title="Download"><i data-lucide="download" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                </div>
+            `).join('') : '';
+            
+            if (clipsData.length > 0) {
+                document.getElementById('clip-count').classList.remove('hidden');
+                document.getElementById('clip-count').innerText = `${clipsData.length} Clips`;
+            }
+            lucide.createIcons();
+        };
+
+        function seekTo(seconds) {
+            if (player) {
+                player.seekTo(seconds, true);
+                player.playVideo();
+            }
+        }
+        window.seekTo = seekTo;
+
+        // --- EDITOR LOGIC (SIMULATION) ---
+        const toolsData = {
+            'media': [{ type: 'video', name: 'Raw Footage.mp4' }, { type: 'video', name: 'B-Roll.mp4' }],
+            'text': [{ type: 'text', name: 'Default', style: 'text-white text-4xl' }, { type: 'text', name: 'Neon', style: 'text-[#00E5FF] text-5xl drop-shadow-[0_0_10px_#00E5FF]' }],
+            'effects': [{ name: 'Vintage', class: 'filter-vintage' }, { name: 'Cyberpunk', class: 'filter-cyber' }, { name: 'Normal', class: 'filter-none' }],
+            'stickers': [{ content: '🔥' }, { content: '👍' }]
+        };
+
+        window.setTool = function(toolName) {
+            activeTool = toolName;
+            document.getElementById('panel-title').innerText = toolName.charAt(0).toUpperCase() + toolName.slice(1);
+            
+            const aiArea = document.getElementById('ai-text-input-area');
+            if (toolName === 'ai-text') {
+                aiArea.classList.remove('hidden');
+                document.getElementById('panel-content').innerHTML = ''; // Clear other content
+            } else {
+                aiArea.classList.add('hidden');
+                const content = document.getElementById('panel-content');
+                content.innerHTML = '';
+                const data = toolsData[toolName] || [];
+                
+                if (toolName === 'media') {
+                     content.innerHTML = `<div class="bg-zinc-800/50 aspect-video rounded border border-white/5 relative group cursor-pointer hover:border-[#00E5FF]"><div class="absolute inset-0 flex items-center justify-center"><i data-lucide="film" class="w-6 h-6 text-zinc-600"></i></div></div>`;
+                } else if (toolName === 'text') {
+                    data.forEach(item => {
+                        const el = document.createElement('div');
+                        el.className = 'bg-zinc-800/50 h-20 rounded border border-white/5 flex items-center justify-center cursor-pointer hover:border-[#00E5FF]';
+                        el.innerText = 'Aa';
+                        el.onclick = () => addTextToCanvas(item.name, item.style);
+                        content.appendChild(el);
+                    });
+                } else if (toolName === 'effects') {
+                    data.forEach(item => {
+                        const el = document.createElement('div');
+                        el.className = 'bg-zinc-800/50 h-10 rounded border border-white/5 flex items-center justify-center cursor-pointer hover:border-[#00E5FF] text-xs text-zinc-400';
+                        el.innerText = item.name;
+                        el.onclick = () => applyEffect(item.class);
+                        content.appendChild(el);
+                    });
+                } else if (toolName === 'stickers') {
+                     data.forEach(item => {
+                        const el = document.createElement('div');
+                        el.className = 'bg-zinc-800/50 h-20 rounded border border-white/5 flex items-center justify-center cursor-pointer hover:border-[#00E5FF] text-2xl';
+                        el.innerText = item.content;
+                        el.onclick = () => addTextToCanvas(item.content, 'text-6xl');
+                        content.appendChild(el);
+                    });
+                }
+            }
+            lucide.createIcons();
+        }
+
+        window.addTextToCanvas = function(text, style) {
+             const canvas = document.getElementById('canvas-overlays');
+             const el = document.createElement('div');
+             el.innerText = text;
+             el.className = `canvas-element absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-move ${style}`;
+             
+             let isDrag = false;
+             el.onmousedown = (e) => { isDrag = true; selectedElement = el; showProperties(el); document.querySelectorAll('.canvas-element').forEach(x => x.classList.remove('selected')); el.classList.add('selected'); };
+             document.onmouseup = () => isDrag = false;
+             document.getElementById('canvas-wrapper').onmousemove = (e) => {
+                 if(isDrag && selectedElement) {
+                     const r = document.getElementById('video-canvas').getBoundingClientRect();
+                     selectedElement.style.left = (e.clientX - r.left) + 'px';
+                     selectedElement.style.top = (e.clientY - r.top) + 'px';
+                 }
+             };
+             canvas.appendChild(el);
+             // Add to timeline
+             document.getElementById('track-text').innerHTML += `<div class="absolute left-20 top-1 bottom-1 w-[100px] bg-[#A78BFA] rounded border border-[#A78BFA]/50 text-[9px] text-black px-1 truncate flex items-center">${text}</div>`;
+        }
+
+        window.applyEffect = function(cls) { document.getElementById('canvas-filter-layer').className = `absolute inset-0 pointer-events-none transition-all duration-300 mix-blend-overlay z-10 ${cls}`; }
+
+        function showProperties(el) {
+             document.getElementById('property-panel').classList.remove('hidden');
+             document.getElementById('prop-text-input').value = el.innerText;
+             document.getElementById('prop-text-input').oninput = (e) => el.innerText = e.target.value;
+             document.getElementById('prop-size-input').oninput = (e) => el.style.fontSize = e.target.value + 'px';
+        }
+        
+        window.changeColor = function(c) { if(selectedElement) selectedElement.style.color = c; }
+
+        window.togglePlay = function() {
+             const btn = document.getElementById('btn-play-pause');
+             const ph = document.getElementById('editor-playhead');
+             if(isPlaying) { isPlaying = false; clearInterval(playInterval); btn.innerHTML = `<i data-lucide="play" class="w-4 h-4 fill-current ml-0.5"></i>`; }
+             else { isPlaying = true; btn.innerHTML = `<i data-lucide="pause" class="w-4 h-4 fill-current ml-0.5"></i>`; playInterval = setInterval(() => { playheadPosition+=2; if(playheadPosition>600) playheadPosition=0; ph.style.left=(playheadPosition+16)+'px'; }, 50); }
+             lucide.createIcons();
+        }
+
+        // --- YOUTUBE LOGIC ---
         const loadBtn = document.getElementById('load-btn');
         const ytInput = document.getElementById('yt-input');
         
+        function getYouTubeVideoId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        window.onYouTubeIframeAPIReady = function() {}
+
+        function onPlayerReady(event) {
+            currentVideoTitle = event.target.getVideoData().title;
+            videoDuration = event.target.getDuration();
+        }
+
         loadBtn.addEventListener('click', () => {
-            if(ytInput.value.length > 0) {
+            const url = ytInput.value.trim();
+            const videoId = getYouTubeVideoId(url);
+            if (videoId) {
+                currentVideoId = videoId;
+                document.getElementById('error-message').classList.add('hidden');
                 document.getElementById('auto-clip-btn').disabled = false;
                 document.getElementById('download-btn').disabled = false;
                 document.getElementById('video-placeholder').classList.add('hidden');
-                document.getElementById('youtube-player').innerHTML = '<div class="w-full h-full bg-black flex items-center justify-center text-white">Video Loaded</div>';
+                
+                // Clear previous clips
+                document.getElementById('clip-list-container').innerHTML = `
+                    <div id="empty-state" class="flex flex-col items-center justify-center text-center p-8 border border-dashed border-zinc-800 rounded-2xl bg-zinc-900/20 h-full min-h-[300px]">
+                        <div class="text-zinc-600 space-y-3">
+                            <i data-lucide="film" class="w-8 h-8 mx-auto opacity-50"></i>
+                            <p class="text-sm font-medium text-zinc-400">Daftar klip kosong</p>
+                        </div>
+                    </div>
+                    <div id="loading-state" class="hidden flex flex-col items-center justify-center text-center p-8 h-full min-h-[300px]">
+                        <div class="loader mb-4 border-l-brand"></div>
+                        <p class="text-sm text-zinc-400">AI sedang menganalisis...</p>
+                    </div>
+                `;
+                document.getElementById('clip-count').classList.add('hidden');
+                lucide.createIcons();
+
+                if (player) { 
+                    player.loadVideoById(videoId); 
+                } else { 
+                    player = new YT.Player('youtube-player', { 
+                        height: '100%', 
+                        width: '100%', 
+                        videoId: videoId, 
+                        events: { 'onReady': onPlayerReady } 
+                    }); 
+                }
+            } else {
+                document.getElementById('error-message').classList.remove('hidden');
             }
         });
 
-        document.getElementById('auto-clip-btn').addEventListener('click', () => {
-             document.getElementById('empty-state').classList.add('hidden');
-             document.getElementById('loading-state').classList.remove('hidden');
-             setTimeout(() => {
-                 document.getElementById('loading-state').classList.add('hidden');
-                 const container = document.getElementById('clip-list-container');
-                 container.innerHTML += `<div class="bg-white/5 p-3 rounded-xl border border-white/5 text-sm text-zinc-300">Generated Clip #1 (00:15)</div>`;
-                 document.getElementById('clip-count').classList.remove('hidden');
-                 document.getElementById('clip-count').innerText = "1 Clip";
-             }, 2000);
-        });
-
+        // Init
         updateCreditDisplay();
     </script>
 </body>
